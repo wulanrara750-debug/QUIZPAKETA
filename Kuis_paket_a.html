@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LATIHAN SOAL PAKET A - Koperasi Sekolah</title>
+    <style>
+        :root {
+            --primary-color: #1e3a8a;
+            --secondary-color: #2563eb;
+            --accent-color: #f59e0b;
+            --bg-color: #eff6ff;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; display: flex; flex-direction: column; }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .audio-controls button, .btn-portal {
+            background: var(--secondary-color);
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            margin-left: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-portal { background: var(--accent-color); color: #1e293b; }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            flex-grow: 1;
+            width: 95%;
+        }
+
+        .hidden { display: none !important; }
+
+        .story-toggle-btn {
+            width: 100%;
+            background-color: #dbeafe;
+            color: var(--primary-color);
+            border: 2px solid var(--secondary-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            transition: background 0.2s;
+        }
+
+        .story-toggle-btn:hover { background-color: #bfdbfe; }
+
+        .story-box {
+            background: #f0f9ff;
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .media-box {
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .media-box svg {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+        }
+
+        @keyframes float-item {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        .animated-item { animation: float-item 3s infinite ease-in-out; }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .option-label {
+            display: block;
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option-label:hover { background: #e2e8f0; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            border: 1px solid #cbd5e0;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th { background-color: #dbeafe; color: var(--primary-color); }
+
+        .center-text { text-align: center; }
+
+        .timer-badge {
+            background: #ef4444;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+
+        .btn-primary { background: var(--primary-color); color: white; }
+        .btn-secondary { background: #64748b; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn:disabled { background: #cbd5e0; cursor: not-allowed; }
+
+        .result-card { text-align: center; padding: 20px; }
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h2>LATIHAN SOAL PAKET A</h2>
+        <div class="audio-controls">
+            <button id="btn-bgm" onclick="toggleBGM()">🎵 Musik: OFF</button>
+            <button id="btn-vo" onclick="toggleVO()">🔊 Suara/VO: ON</button>
+            <button class="btn-portal" onclick="openTeacherPortal()">🔑 Portal Guru</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- STEP 1: IDENTITAS SISWA -->
+        <div id="screen-intro">
+            <h2>Materi: Operasi Hitung Bilangan Cacah</h2>
+            <p style="margin-top: 5px; color: #475569;">Isi data diri Anda dengan lengkap untuk memulai kuis.</p>
+            <br>
+            <form onsubmit="startQuiz(event)">
+                <label for="student-name"><b>Nama Lengkap Siswa:</b></label>
+                <input type="text" id="student-name" required placeholder="Masukkan nama Anda...">
+                
+                <label for="student-class"><b>Kelas:</b></label>
+                <input type="text" id="student-class" required placeholder="Contoh: 5A">
+
+                <label for="student-presensi"><b>Nomor Presensi:</b></label>
+                <input type="text" id="student-presensi" required placeholder="Contoh: 12">
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Mulai Mengerjakan Kuis</button>
+            </form>
+        </div>
+
+        <!-- STEP 2: PENGERJAAN SOAL -->
+        <div id="screen-quiz" class="hidden">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <span id="question-tracker" style="font-weight: bold;">Soal 1 dari 15</span>
+                <span class="timer-badge" id="timer-display">⏱ Waktu: 00:00</span>
+            </div>
+
+            <button type="button" class="story-toggle-btn" onclick="toggleStory()">
+                <span>📖 Tampilkan / Sembunyikan Bacaan Kasus (Koperasi Sekolah)</span>
+                <span id="story-toggle-icon">▼ Klik untuk membuka</span>
+            </button>
+
+            <div id="story-container" class="story-box hidden">
+                <h3>🏫 Kasus: Koperasi Sekolah</h3>
+                <p>Di SD Harapan Bangsa, kelas 5 mengelola kegiatan "Koperasi Sekolah" yang menjual perlengkapan menggambar:</p>
+                <br>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Barang</th>
+                            <th>Harga Satuan</th>
+                            <th>Jumlah Terjual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Buku Gambar</td><td>Rp3.000,00</td><td>50 buah</td></tr>
+                        <tr><td>Spidol</td><td>Rp4.500,00</td><td>40 buah</td></tr>
+                        <tr><td>Penggaris</td><td>Rp1.500,00</td><td>80 buah</td></tr>
+                    </tbody>
+                </table>
+                <p>Modal awal Rp300.000. Keuntungan digunakan untuk kegiatan sosial dan kas kelas.</p>
+            </div>
+
+            <div class="media-box" id="media-container"></div>
+
+            <div id="question-container"></div>
+
+            <div class="nav-buttons">
+                <button id="btn-prev" class="btn btn-secondary" onclick="prevQuestion()">Sebelumnya</button>
+                <button id="btn-next" class="btn btn-primary" onclick="nextQuestion()">Selanjutnya</button>
+                <button id="btn-finish" class="btn btn-primary hidden" onclick="confirmFinish()">Selesai & Kirim</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: HASIL AKHIR SISWA -->
+        <div id="screen-result" class="hidden">
+            <div class="result-card">
+                <h2>Hasil Latihan Soal Paket A</h2>
+                <p>Terima kasih telah menyelesaikan kuis ini!</p>
+                
+                <div class="score-display" id="final-score">0</div>
+                <p id="final-category" style="font-size: 1.2rem; font-weight: bold; margin-bottom: 10px;"></p>
+                <p id="final-time"></p>
+                
+                <hr style="margin: 20px 0;">
+                
+                <div style="display: flex; justify-content: center; gap: 15px;">
+                    <button class="btn btn-primary" onclick="resetQuiz()">Mengerjakan Ulang / Masuk Sebagai Siswa Lain</button>
+                    <button class="btn btn-danger" onclick="exitQuiz()">Keluar</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 4: PORTAL GURU -->
+        <div id="screen-teacher" class="hidden">
+            <h2>🔑 Portal Guru - Rekapitulasi Data Hasil Kuis Paket A</h2>
+            <p style="margin-bottom: 15px;">Data nilai seluruh siswa yang telah menyelesaikan kuis:</p>
+
+            <button class="btn btn-primary" onclick="downloadExcel()" style="margin-bottom: 15px;">📥 Unduh Data Rekap (Excel/CSV)</button>
+            <button class="btn btn-secondary" onclick="clearData()" style="margin-bottom: 15px; background: #c53030;">🗑 Hapus Semua Data Browser</button>
+
+            <div style="overflow-x: auto;">
+                <table id="teacher-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Siswa</th>
+                            <th>Kelas</th>
+                            <th>No Presensi</th>
+                            <th>Waktu Pengerjaan</th>
+                            <th>Skor Total (30)</th>
+                            <th>Nilai Akhir</th>
+                            <th>Kategori</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacher-tbody"></tbody>
+                </table>
+            </div>
+
+            <br>
+            <button class="btn btn-secondary" onclick="closeTeacherPortal()">Kembali ke Kuis</button>
+        </div>
+    </div>
+
+    <script>
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_rZuOONCXAtcmjfS34jGRVEy6Ae5zL24Cy5pZ4BXlnM8pRY4yIATV3zNy0nnY7pLo/exec";
+        const TEACHER_PASS = "GuruCerdas#2026!Math";
+
+        const quizData = [
+            {
+                type: 'pg',
+                prompt: "Hitung total penjualan Buku Gambar pada \"Koperasi Sekolah\". Jika kamu menjumlahkan angka 0 sesuai sifat identitas penjumlahan, maka hasilnya adalah ….",
+                options: ["Rp0,00", "Rp130.000,00", "Rp150.000,00", "Rp180.000,00"],
+                key: 2,
+                svg: `<svg viewBox="0 0 200 90"><rect x="30" y="15" width="140" height="60" rx="8" fill="#2563eb" class="animated-item"/><text x="100" y="50" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">BUKU GAMBAR</text></svg>`
+            },
+            {
+                type: 'pg',
+                prompt: "Total penjualan dapat dihitung dengan cara berikut:\n(150.000 + 180.000) + 120.000 atau 150.000 + (180.000 + 120.000)\nOperasi hitung di atas merupakan contoh dari sifat ….",
+                options: ["Komutatif", "Distributif", "Identitas", "Asosiatif"],
+                key: 3,
+                svg: `<svg viewBox="0 0 200 90"><rect x="20" y="20" width="160" height="50" rx="25" fill="#f59e0b" class="animated-item"/><text x="100" y="50" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">KOPERASI SEKOLAH</text></svg>`
+            },
+            {
+                type: 'pg',
+                prompt: "Tentukan urutan sifat operasi hitung yang tepat untuk pernyataan (a) sampai (g) berikut secara berturut-turut!\n(3.000 + 4.500) + 1.500 = 3.000 + (4.500 + 1.500)\n50 × (3.000 + 4.500) = (50 × 3.000) + (50 × 4.500)\n1.500 × 80 = 80 × 1.500\n3.000 + 0 = 3.000\n4.500 – 4.500 = 0\n1.500 × 1 = 1.500\n30 × 1/30 = 1",
+                options: [
+                    "Asosiatif, Distributif, Komutatif, Identitas, Invers, Identitas, Invers",
+                    "Distributif, Asosiatif, Komutatif, Invers, Identitas, Invers, Identitas",
+                    "Komutatif, Asosiatif, Distributif, Identitas, Invers, Identitas, Invers",
+                    "Asosiatif, Komutatif, Distributif, Identitas, Invers, Invers, Identitas"
+                ],
+                key: 0,
+                svg: `<svg viewBox="0 0 200 90"><rect x="15" y="20" width="170" height="50" rx="8" fill="#1e3a8a"/><text x="100" y="50" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">SIFAT OPERASI HITUNG</text></svg>`
+            },
+            {
+                type: 'pg',
+                prompt: "Kalimat matematika yang tepat berdasarkan sifat distributif dari “8 paket berisi 1 buku gambar dan 2 spidol” yaitu ….",
+                options: [
+                    "8 × ((1 × 3.000) + (2 × 4.500)) = Rp96.000,00",
+                    "(1 × 3.000) + (2 × 4.500) = Rp12.000,00",
+                    "8 × (1 × 3.000) + (2 × 4.500) = Rp33.000,00",
+                    "8 × (1 × 3.000 + 1 × 4.500) = Rp60.000,00"
+                ],
+                key: 0,
+                svg: `<svg viewBox="0 0 200 90"><rect x="20" y="20" width="160" height="50" rx="8" fill="#1e3a8a" class="animated-item"/><text x="100" y="42" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">PAKET PERLENGKAPAN</text><text x="100" y="58" font-size="10" fill="#f59e0b" text-anchor="middle" font-weight="bold">Buku Gambar & Spidol</text></svg>`
+            },
+            {
+                type: 'pg',
+                prompt: "Seorang siswa membeli 7 buku gambar seharga Rp3.000,00. Ia menghitung total uang yang harus dibayar dengan dua cara, yaitu penjumlahan berulang dan perkalian. Kesimpulan yang tepat adalah ….",
+                options: [
+                    "Keduanya menghasilkan Rp21.000,00; perkalian merupakan bentuk singkat dari penjumlahan berulang.",
+                    "Penjumlahan berulang menghasilkan Rp24.000,00, sedangkan perkalian menghasilkan Rp21.000,00, sehingga keduanya berbeda.",
+                    "Keduanya menghasilkan Rp18.000,00 karena perkalian sama dengan pembagian berulang.",
+                    "Perkalian selalu menghasilkan angka yang lebih kecil dibandingkan penjumlahan berulang."
+                ],
+                key: 0,
+                svg: `<svg viewBox="0 0 200 90"><rect x="25" y="20" width="150" height="50" rx="8" fill="#059669"/><text x="100" y="50" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">PEMBELIAN BUKU GAMBAR</text></svg>`
+            },
+            {
+                type: 'pg',
+                prompt: "Bandingkan hasil dari (45 + 30) : 5 dengan 45 + (30 : 5). Pernyataan yang tepat terkait dengan urutan operasi hitung adalah ….",
+                options: [
+                    "Kedua hasil sama yaitu 15, karena pembagian bersifat komutatif dengan penjumlahan.",
+                    "(45 + 30) : 5 = 15, sedangkan 45 + (30 : 5) = 51; keduanya berbeda karena urutan pengerjaan operasi hitung memengaruhi hasil akhir.",
+                    "(45 + 30) : 5 = 51, sedangkan 45 + (30 : 5) = 15; keduanya berbeda karena tanda kurung tidak berpengaruh pada hasil.",
+                    "Kedua hasil sama yaitu 51, karena pembagian selalu dikerjakan setelah penjumlahan."
+                ],
+                key: 1,
+                svg: `<svg viewBox="0 0 200 90"><rect x="15" y="20" width="170" height="50" rx="8" fill="#d97706"/><text x="100" y="50" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">URUTAN OPERASI HITUNG</text></svg>`
+            },
+            {
+                type: 'pg',
+                prompt: "Langkah-langkah yang tepat untuk menghitung keuntungan Koperasi Sekolah, di mana setengahnya untuk kegiatan sosial dan sisanya untuk kas kelas adalah ….",
+                options: [
+                    "Total penjualan (Rp450.000,00) dikurangi modal (Rp300.000,00) = keuntungan Rp150.000,00, lalu dibagi 2 = Rp75.000,00.",
+                    "Total penjualan (Rp450.000,00) ditambah modal (Rp300.000,00) = Rp750.000,00, lalu dibagi 2 = Rp375.000,00.",
+                    "Modal (Rp300.000,00) dikurangi total penjualan (Rp450.000,00) = -Rp150.000,00, lalu dibagi 2 = -Rp75.000,00.",
+                    "Total penjualan (Rp450.000,00) langsung dibagi 2 menjadi Rp225.000,00 tanpa mengurangi modal terlebih dahulu."
+                ],
+                key: 0,
+                svg: `<svg viewBox="0 0 200 90"><rect x="20" y="20" width="160" height="50" rx="8" fill="#10b981"/><text x="100" y="50" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">KEUNTUNGAN KOPERASI</text></svg>`
+            },
+            {
+                type: 'pg',
+                prompt: "Perhatikan pernyataan berikut: 150.000 + 180.000 = 180.000 + 150.000. Pernyataan tersebut menunjukkan sifat ….",
+                options: ["Distributif", "Asosiatif", "Komutatif", "Identitas"],
+                key: 2,
+                svg: `<svg viewBox="0 0 200 90"><rect x="25" y="20" width="150" height="50" rx="25" fill="#2563eb"/><text x="100" y="50" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">SIFAT PENJUMLAHAN</text></svg>`
+            },
+            {
+                type: 'pg',
+                prompt: "Harga satu buah penggaris adalah Rp1.500,00, sehingga dapat dituliskan 1.500 × 1 = 1.500. Sifat operasi hitung yang ditunjukkan oleh kalimat matematika tersebut adalah ….",
+                options: ["Identitas perkalian", "Invers perkalian", "Komutatif perkalian", "Distributif"],
+                key: 0,
+                svg: `<svg viewBox="0 0 200 90"><rect x="20" y="20" width="160" height="50" rx="8" fill="#f59e0b" class="animated-item"/><text x="100" y="50" font-size="14" fill="#fff" text-anchor="middle" font-weight="bold">PENGGARIS KOPERASI</text></svg>`
+            },
+            {
+                type: 'pg',
+                prompt: "Jika dua bilangan cacah dijumlahkan atau dikalikan, hasilnya akan selalu berupa …. Sifat ini disebut ….",
+                options: [
+                    "Bilangan pecahan; sifat pecahan",
+                    "Bilangan cacah; sifat tertutup",
+                    "Bilangan negatif; sifat invers",
+                    "Bilangan desimal; sifat distributif"
+                ],
+                key: 1,
+                svg: `<svg viewBox="0 0 200 90"><rect x="20" y="20" width="160" height="50" rx="8" fill="#1e3a8a"/><text x="100" y="50" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">BILANGAN CACAH</text></svg>`
+            },
+            {
+                type: 'pgk',
+                prompt: "Data Koperasi Siswa Sekolah: Buku Gambar Rp3.000,00 (terjual 50), Spidol Rp4.500,00 (terjual 40), Penggaris Rp1.500,00 (terjual 80). Modal awal Rp300.000,00. Total penjualan = Rp450.000,00, sehingga keuntungan = Rp450.000,00 – Rp300.000,00 = Rp150.000,00.\n\nTotal penjualan Koperasi Siswa Sekolah adalah Rp450.000,00. Setelah dikurangi modal Rp300.000,00, keuntungan dibagikan kepada 3 anggota kelompok.",
+                statements: [
+                    { id: '11a', text: "a. Keuntungan yang diperoleh kelompok tersebut adalah Rp150.000,00.", key: "Benar" },
+                    { id: '11b', text: "b. Setiap anggota kelompok menerima bagian sebesar Rp50.000,00.", key: "Benar" },
+                    { id: '11c', text: "c. Jika keuntungan dibagi rata ke 3 anggota, total seluruh bagian akan lebih kecil daripada keuntungan awal.", key: "Salah" },
+                    { id: '11d', text: "d. Untuk memeriksa jawaban, hasil bagi dikalikan kembali dengan jumlah anggota harus sama dengan keuntungan awal (Rp150.000,00).", key: "Benar" }
+                ],
+                svg: `<svg viewBox="0 0 200 90"><rect x="20" y="20" width="160" height="50" rx="8" fill="#2563eb"/><text x="100" y="50" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">PEMBAGIAN KEUNTUNGAN</text></svg>`
+            },
+            {
+                type: 'pgk',
+                prompt: "Keuntungan Koperasi Siswa Sekolah (Rp150.000,00) digunakan untuk membeli 3 kotak spidol seharga Rp30.000,00 per kotak dan 2 pak penggaris seharga Rp20.000,00 per pak.",
+                statements: [
+                    { id: '12a', text: "a. Total harga 3 kotak spidol adalah Rp90.000,00.", key: "Benar" },
+                    { id: '12b', text: "b. Total harga 2 pak penggaris adalah Rp50.000,00.", key: "Salah" },
+                    { id: '12c', text: "c. Total seluruh belanja (spidol dan penggaris) adalah Rp130.000,00.", key: "Benar" },
+                    { id: '12d', text: "d. Uang keuntungan tidak cukup untuk membeli seluruh barang tersebut.", key: "Salah" }
+                ],
+                svg: `<svg viewBox="0 0 200 90"><rect x="20" y="20" width="160" height="50" rx="8" fill="#ef4444"/><text x="100" y="42" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">PEMBELIAN PERLENGKAPAN</text><text x="100" y="58" font-size="10" fill="#fff" text-anchor="middle" font-weight="bold">Spidol & Penggaris</text></svg>`
+            },
+            {
+                type: 'pgk',
+                prompt: "Seorang siswa membeli 2 buku gambar, 1 spidol, dan 3 penggaris. Ia membawa uang Rp20.000,00.",
+                statements: [
+                    { id: '13a', text: "a. Harga 2 buku gambar adalah Rp6.000,00.", key: "Benar" },
+                    { id: '13b', text: "b. Harga 3 penggaris adalah Rp4.500,00.", key: "Benar" },
+                    { id: '13c', text: "c. Total belanja siswa tersebut adalah Rp15.000,00.", key: "Benar" },
+                    { id: '13d', text: "d. Uang siswa tersebut kurang untuk membayar seluruh belanjaannya.", key: "Salah" }
+                ],
+                svg: `<svg viewBox="0 0 200 90"><rect x="25" y="20" width="150" height="50" rx="8" fill="#10b981"/><text x="100" y="50" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">TRANSAKSI BELANJA SISWA</text></svg>`
+            },
+            {
+                type: 'pgk',
+                prompt: "Setelah keuntungan dibagi kepada 3 anggota kelompok, salah satu anggota menggunakan bagiannya untuk membeli 2 buku gambar dan 1 penggaris.",
+                statements: [
+                    { id: '14a', text: "a. Bagian yang diterima anggota tersebut dari pembagian keuntungan adalah Rp50.000,00.", key: "Benar" },
+                    { id: '14b', text: "b. Total harga 2 buku gambar dan 1 penggaris adalah Rp6.000,00.", key: "Salah" },
+                    { id: '14c', text: "c. Uang anggota tersebut masih bersisa setelah membeli barang-barang itu.", key: "Benar" },
+                    { id: '14d', text: "d. Sisa uang anggota tersebut setelah berbelanja adalah Rp42.500,00.", key: "Salah" }
+                ],
+                svg: `<svg viewBox="0 0 200 90"><rect x="20" y="20" width="160" height="50" rx="8" fill="#3b82f6"/><text x="100" y="50" font-size="12" fill="#fff" text-anchor="middle" font-weight="bold">PENGGUNAAN UANG HAK ANGGOTA</text></svg>`
+            },
+            {
+                type: 'pgk',
+                prompt: "Sebelum keuntungan dibagi kepada 3 anggota kelompok, kelompok tersebut sepakat menyisihkan Rp30.000,00 dari keuntungan untuk tambahan modal periode berikutnya.",
+                statements: [
+                    { id: '15a', text: "a. Sisa keuntungan setelah disisihkan untuk tambahan modal adalah Rp120.000,00.", key: "Benar" },
+                    { id: '15b', text: "b. Setiap anggota akan menerima bagian sebesar Rp40.000,00.", key: "Benar" },
+                    { id: '15c', text: "c. Bagian yang diterima tiap anggota menjadi lebih besar dibandingkan sebelum ada penyisihan dana.", key: "Salah" },
+                    { id: '15d', text: "d. Jika seluruh bagian anggota dijumlahkan kembali, hasilnya akan sama dengan Rp120.000,00.", key: "Benar" }
+                ],
+                svg: `<svg viewBox="0 0 200 90"><rect x="20" y="20" width="160" height="50" rx="8" fill="#10b981"/><text x="100" y="50" font-size="13" fill="#fff" text-anchor="middle" font-weight="bold">PENYISIHAN MODAL KAS</text></svg>`
+            }
+        ];
+
+        let currentIdx = 0;
+        let studentAnswers = {};
+        let currentStudent = {};
+        let timerInterval;
+        let secondsElapsed = 0;
+        let bgmOn = false;
+        let voOn = true;
+        let audioCtx;
+        let bgmNoteIndex = 0;
+
+        const upbeatNotes = [329.63, 392.00, 523.25, 587.33, 659.25, 587.33, 523.25, 392.00];
+
+        function playBGM() {
+            if (!bgmOn) return;
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            let osc = audioCtx.createOscillator();
+            let gain = audioCtx.createGain();
+            
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(upbeatNotes[bgmNoteIndex % upbeatNotes.length], audioCtx.currentTime);
+            
+            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.002, audioCtx.currentTime + 0.14);
+            
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.14);
+
+            bgmNoteIndex++;
+            if (bgmOn) setTimeout(playBGM, 150);
+        }
+
+        function toggleBGM() {
+            bgmOn = !bgmOn;
+            document.getElementById('btn-bgm').innerText = `🎵 Musik: ${bgmOn ? 'ON' : 'OFF'}`;
+            if (bgmOn) playBGM();
+        }
+
+        function toggleVO() {
+            voOn = !voOn;
+            document.getElementById('btn-vo').innerText = `🔊 Suara/VO: ${voOn ? 'ON' : 'OFF'}`;
+            if (!voOn && window.speechSynthesis) window.speechSynthesis.cancel();
+            else speakCurrentQuestion();
+        }
+
+        function toggleStory() {
+            const container = document.getElementById('story-container');
+            const icon = document.getElementById('story-toggle-icon');
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                icon.innerText = '▲ Klik untuk menutup';
+            } else {
+                container.classList.add('hidden');
+                icon.innerText = '▼ Klik untuk membuka';
+            }
+        }
+
+        function speakText(text) {
+            if (!voOn || !('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            let utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'id-ID';
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function startTimer() {
+            secondsElapsed = 0;
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                let m = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+                let s = (secondsElapsed % 60).toString().padStart(2, '0');
+                document.getElementById('timer-display').innerText = `⏱ Waktu: ${m}:${s}`;
+            }, 1000);
+        }
+
+        function startQuiz(e) {
+            e.preventDefault();
+            let name = document.getElementById('student-name').value;
+            let cls = document.getElementById('student-class').value;
+            let pres = document.getElementById('student-presensi').value;
+            currentStudent = { name, class: cls, presensi: pres };
+
+            document.getElementById('screen-intro').classList.add('hidden');
+            document.getElementById('screen-quiz').classList.remove('hidden');
+
+            startTimer();
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const q = quizData[currentIdx];
+            document.getElementById('question-tracker').innerText = `Soal ${currentIdx + 1} dari ${quizData.length}`;
+            document.getElementById('media-container').innerHTML = q.svg;
+
+            let html = `<p style="font-size: 1.1rem; line-height: 1.5; margin-bottom: 15px; white-space: pre-line;"><b>${q.prompt}</b></p>`;
+
+            if (q.type === 'pg') {
+                q.options.forEach((opt, idx) => {
+                    let checked = studentAnswers[`pg_${currentIdx}`] === idx ? 'checked' : '';
+                    html += `
+                        <label class="option-label">
+                            <input type="radio" name="pg_${currentIdx}" value="${idx}" ${checked} onchange="saveAnswer('pg_${currentIdx}', ${idx})">
+                            ${String.fromCharCode(65 + idx)}. ${opt}
+                        </label>
+                    `;
+                });
+            } else if (q.type === 'pgk') {
+                html += `<table>
+                    <thead>
+                        <tr>
+                            <th>Pernyataan</th>
+                            <th class="center-text" style="width: 80px;">Benar</th>
+                            <th class="center-text" style="width: 80px;">Salah</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+                q.statements.forEach((st) => {
+                    let ans = studentAnswers[st.id] || '';
+                    html += `<tr>
+                        <td>${st.text}</td>
+                        <td class="center-text">
+                            <input type="radio" name="st_${st.id}" value="Benar" ${ans === 'Benar' ? 'checked' : ''} onchange="saveAnswer('${st.id}', 'Benar')">
+                        </td>
+                        <td class="center-text">
+                            <input type="radio" name="st_${st.id}" value="Salah" ${ans === 'Salah' ? 'checked' : ''} onchange="saveAnswer('${st.id}', 'Salah')">
+                        </td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+            }
+
+            document.getElementById('question-container').innerHTML = html;
+
+            document.getElementById('btn-prev').disabled = currentIdx === 0;
+            if (currentIdx === quizData.length - 1) {
+                document.getElementById('btn-next').classList.add('hidden');
+                document.getElementById('btn-finish').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-next').classList.remove('hidden');
+                document.getElementById('btn-finish').classList.add('hidden');
+            }
+
+            speakCurrentQuestion();
+        }
+
+        function speakCurrentQuestion() {
+            let q = quizData[currentIdx];
+            let textToRead = `Soal nomor ${currentIdx + 1}. ` + q.prompt;
+            speakText(textToRead);
+        }
+
+        function saveAnswer(key, val) {
+            studentAnswers[key] = val;
+        }
+
+        function nextQuestion() {
+            if (currentIdx < quizData.length - 1) {
+                currentIdx++;
+                renderQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentIdx > 0) {
+                currentIdx--;
+                renderQuestion();
+            }
+        }
+
+        function confirmFinish() {
+            if (confirm("Apakah Anda yakin ingin menyelesaikan kuis Paket A ini?")) {
+                clearInterval(timerInterval);
+                calculateResult();
+            }
+        }
+
+        function calculateResult() {
+            let scorePG = 0;
+            let scorePGK = 0;
+
+            quizData.forEach((q, idx) => {
+                if (q.type === 'pg') {
+                    if (studentAnswers[`pg_${idx}`] === q.key) {
+                        scorePG += 1;
+                    }
+                }
+            });
+
+            quizData.forEach((q) => {
+                if (q.type === 'pgk') {
+                    q.statements.forEach((st) => {
+                        if (studentAnswers[st.id] === st.key) {
+                            scorePGK += 1;
+                        }
+                    });
+                }
+            });
+
+            let totalSkor = scorePG + scorePGK;
+            let nilaiAkhir = Math.round((totalSkor / 30) * 100);
+
+            let kategori = "";
+            if (nilaiAkhir >= 81) kategori = "Sangat Baik";
+            else if (nilaiAkhir >= 71) kategori = "Baik";
+            else if (nilaiAkhir >= 61) kategori = "Cukup";
+            else kategori = "Perlu Bimbingan";
+
+            let m = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+            let s = (secondsElapsed % 60).toString().padStart(2, '0');
+            let timeFormatted = `${m}:${s}`;
+
+            let record = {
+                name: currentStudent.name,
+                class: currentStudent.class,
+                presensi: currentStudent.presensi,
+                time: timeFormatted,
+                scorePG: scorePG,
+                scorePGK: scorePGK,
+                totalSkor: totalSkor,
+                finalScore: nilaiAkhir,
+                kategori: kategori,
+                date: new Date().toLocaleString("id-ID")
+            };
+
+            let records = JSON.parse(localStorage.getItem('quiz_records_paket_a') || '[]');
+            records.push(record);
+            localStorage.setItem('quiz_records_paket_a', JSON.stringify(records));
+
+            if (GOOGLE_SCRIPT_URL) {
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(record)
+                }).catch(error => console.error('Error pengiriman:', error));
+            }
+
+            document.getElementById('screen-quiz').classList.add('hidden');
+            document.getElementById('screen-result').classList.remove('hidden');
+
+            document.getElementById('final-score').innerText = nilaiAkhir;
+            document.getElementById('final-category').innerText = `Kategori: ${kategori}`;
+            document.getElementById('final-time').innerText = `Waktu Pengerjaan: ${timeFormatted}`;
+        }
+
+        function resetQuiz() {
+            currentIdx = 0;
+            studentAnswers = {};
+            document.getElementById('screen-result').classList.add('hidden');
+            document.getElementById('screen-intro').classList.remove('hidden');
+            document.getElementById('student-name').value = '';
+            document.getElementById('student-class').value = '';
+            document.getElementById('student-presensi').value = '';
+        }
+
+        function exitQuiz() {
+            alert("Terima kasih sudah mengerjakan Latihan Soal Paket A!");
+            location.reload();
+        }
+
+        function openTeacherPortal() {
+            let pass = prompt("Masukkan Kata Sandi Guru:");
+            if (pass === TEACHER_PASS) {
+                renderTeacherTable();
+                document.getElementById('screen-intro').classList.add('hidden');
+                document.getElementById('screen-quiz').classList.add('hidden');
+                document.getElementById('screen-result').classList.add('hidden');
+                document.getElementById('screen-teacher').classList.remove('hidden');
+            } else if (pass !== null) {
+                alert("Kata sandi salah!");
+            }
+        }
+
+        function closeTeacherPortal() {
+            document.getElementById('screen-teacher').classList.add('hidden');
+            document.getElementById('screen-intro').classList.remove('hidden');
+        }
+
+        function renderTeacherTable() {
+            let records = JSON.parse(localStorage.getItem('quiz_records_paket_a') || '[]');
+            let tbody = document.getElementById('teacher-tbody');
+            tbody.innerHTML = '';
+
+            if (records.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="center-text">Belum ada data siswa pada browser ini.</td></tr>`;
+                return;
+            }
+
+            records.forEach((rec, idx) => {
+                let tr = `<tr>
+                    <td>${idx + 1}</td>
+                    <td>${rec.name}</td>
+                    <td>${rec.class}</td>
+                    <td>${rec.presensi}</td>
+                    <td>${rec.time}</td>
+                    <td>${rec.totalSkor} / 30</td>
+                    <td><b>${rec.finalScore}</b></td>
+                    <td>${rec.kategori}</td>
+                </tr>`;
+                tbody.innerHTML += tr;
+            });
+        }
+
+        function downloadExcel() {
+            let records = JSON.parse(localStorage.getItem('quiz_records_paket_a') || '[]');
+            if (records.length === 0) {
+                alert("Tidak ada data untuk diunduh!");
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,No,Nama Siswa,Kelas,No Presensi,Waktu Pengerjaan,Total Skor,Nilai Akhir,Kategori,Tanggal\n";
+            records.forEach((r, i) => {
+                csvContent += `${i+1},"${r.name}","${r.class}","${r.presensi}",${r.time},${r.totalSkor},${r.finalScore},"${r.kategori}","${r.date}"\n`;
+            });
+
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Rekap_Nilai_Paket_A.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function clearData() {
+            if (confirm("Apakah Anda yakin ingin menghapus seluruh rekap nilai Paket A pada browser ini?")) {
+                localStorage.removeItem('quiz_records_paket_a');
+                renderTeacherTable();
+            }
+        }
+    </script>
+</body>
+</html>
